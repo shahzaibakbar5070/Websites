@@ -1,9 +1,9 @@
-﻿// ============================================================
-//  GameWiki — Node.js & MongoDB Auth Client
-//  Connects frontend to Express REST API (/api/auth & /api/profile)
+// ============================================================
+// GameWiki — Node.js & MongoDB Auth Client
 // ============================================================
 
-const API_BASE = window.location.origin.startsWith("http") ? "" : "http://localhost:3000";
+// Same-origin API in production and localhost in local development.
+const API_BASE = "";
 const TOKEN_KEY = "gamewiki_jwt_token";
 const USER_KEY = "gamewiki_user_session";
 const FAVS_CACHE_KEY = "gamewiki_favs_cache";
@@ -35,18 +35,21 @@ function isLoggedIn() {
   return getToken() !== null && getCurrentUser() !== null;
 }
 
-// Helper: authenticated fetch
 async function authFetch(url, options = {}) {
   const token = getToken();
   const headers = {
     "Content-Type": "application/json",
-    ...(token ? { "Authorization": `Bearer ${token}` } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...(options.headers || {})
   };
 
   try {
     const res = await fetch(`${API_BASE}${url}`, { ...options, headers });
-    const data = await res.json();
+    const contentType = res.headers.get("content-type") || "";
+    const data = contentType.includes("application/json")
+      ? await res.json()
+      : { success: false, message: await res.text() };
+
     return { ok: res.ok, status: res.status, data };
   } catch (err) {
     console.error(`API request failed [${url}]:`, err);
@@ -55,13 +58,12 @@ async function authFetch(url, options = {}) {
       status: 0,
       data: {
         success: false,
-        message: "Could not connect to backend server. Make sure the Node server is running with 'npm start'."
+        message: "Could not connect to the GameWiki backend."
       }
     };
   }
 }
 
-// ---- Register User in MongoDB ----
 async function register(username, email, password) {
   const res = await authFetch("/api/auth/register", {
     method: "POST",
@@ -69,12 +71,16 @@ async function register(username, email, password) {
   });
 
   if (res.ok && res.data.success) {
-    return { success: true, message: res.data.message };
+    // Registration returns a JWT and user object; save both so the new account
+    // is immediately logged in instead of requiring a second login.
+    setSession(res.data.token, res.data.user);
+    fetchFavorites();
+    return { success: true, user: res.data.user, message: res.data.message };
   }
+
   return { success: false, message: res.data.message || "Registration failed." };
 }
 
-// ---- Login User via MongoDB & JWT ----
 async function login(email, password) {
   const res = await authFetch("/api/auth/login", {
     method: "POST",
@@ -83,14 +89,13 @@ async function login(email, password) {
 
   if (res.ok && res.data.success) {
     setSession(res.data.token, res.data.user);
-    // Fetch initial favorites to warm cache
     fetchFavorites();
     return { success: true, user: res.data.user, message: res.data.message };
   }
+
   return { success: false, message: res.data.message || "Login failed." };
 }
 
-// ---- Logout ----
 async function logout() {
   try {
     await authFetch("/api/auth/logout", { method: "POST" });
@@ -99,7 +104,6 @@ async function logout() {
   window.location.href = "index.html";
 }
 
-// ---- Update Profile in MongoDB ----
 async function updateProfile({ username, bio, favoriteGenre }) {
   const res = await authFetch("/api/profile", {
     method: "PUT",
@@ -112,10 +116,10 @@ async function updateProfile({ username, bio, favoriteGenre }) {
     setSession(null, updated);
     return { success: true, user: updated, message: res.data.message };
   }
+
   return { success: false, message: res.data.message || "Failed to update profile." };
 }
 
-// ---- Favorites / Saved Games in MongoDB ----
 async function fetchFavorites() {
   if (!isLoggedIn()) return [];
   const res = await authFetch("/api/profile/favorites");
@@ -137,7 +141,7 @@ function getFavorites() {
 
 async function toggleFavorite(game) {
   if (!isLoggedIn()) {
-    return { success: false, message: "Please log in to save games to your MongoDB profile." };
+    return { success: false, message: "Please log in to save games to your profile." };
   }
 
   const res = await authFetch("/api/profile/favorites", {
@@ -173,11 +177,9 @@ async function toggleFavorite(game) {
 }
 
 function isFavorite(gameId) {
-  const favs = getFavorites();
-  return favs.some(g => g.id == gameId);
+  return getFavorites().some(g => g.id == gameId);
 }
 
-// Auto-sync user state on page load
 if (isLoggedIn()) {
   authFetch("/api/auth/me").then(res => {
     if (res.ok && res.data.success) {
