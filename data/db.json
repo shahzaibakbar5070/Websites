@@ -1,0 +1,28 @@
+{
+  "users": [
+    {
+      "_id": "user_1788452846127",
+      "username": "TestPlayer",
+      "email": "player@example.com",
+      "password": "$2a$10$P3vK/8dmAKySmrLADzILYeIFrsBdMNNZY/QRFiGBXLFuLn16I5jUO",
+      "avatar": "T",
+      "bio": "Passionate gamer exploring the vast universe of video games.",
+      "favoriteGenre": "Action / RPG",
+      "savedGames": [],
+      "createdAt": "2026-09-03T16:27:26.127Z",
+      "updatedAt": "2026-09-03T16:27:26.127Z"
+    },
+    {
+      "_id": "user_1788501034827",
+      "username": "Ryzen570",
+      "email": "shahzaibakbar5070@gmail.com",
+      "password": "$2a$10$038lZGE8MWiuW5NbCxsDp.fUGMXQ6zMJ7mF3cheRQqxmSwrPyWF8O",
+      "avatar": "R",
+      "bio": "Passionate gamer exploring the vast universe of video games.",
+      "favoriteGenre": "Action / RPG",
+      "savedGames": [],
+      "createdAt": "2026-09-04T05:50:34.829Z",
+      "updatedAt": "2026-09-04T05:50:34.829Z"
+    }
+  ]
+}
