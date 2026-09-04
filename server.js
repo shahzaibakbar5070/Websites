@@ -6,7 +6,7 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const MONGO_URI = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/gamewiki";
+const MONGO_URI = process.env.MONGO_URI || "";
 
 app.use(cors());
 app.use(express.json());
@@ -15,29 +15,52 @@ app.use(express.urlencoded({ extended: true }));
 // Serve the static frontend from the repository root.
 app.use(express.static(__dirname));
 
-// Reuse the same MongoDB connection across Vercel invocations when possible.
-let isConnected = false;
+// Reuse the same MongoDB connection across Vercel invocations.
+let connectionPromise = null;
 const connectDB = async () => {
-  if (isConnected || mongoose.connection.readyState === 1) return;
+  if (!MONGO_URI) return false;
+  if (mongoose.connection.readyState === 1) return true;
 
-  if (!process.env.MONGO_URI) {
-    console.warn("[Notice] MONGO_URI is not configured.");
-    return;
-  }
-
-  try {
-    const conn = await mongoose.connect(MONGO_URI, {
-      serverSelectionTimeoutMS: 4000
+  if (!connectionPromise) {
+    connectionPromise = mongoose.connect(MONGO_URI, {
+      serverSelectionTimeoutMS: 8000,
+      maxPoolSize: 10
+    }).then(() => {
+      console.log(`MongoDB Connected: ${mongoose.connection.host}`);
+      return true;
+    }).catch((err) => {
+      connectionPromise = null;
+      console.error("MongoDB connection failed:", err.message);
+      return false;
     });
-    isConnected = true;
-    console.log(`MongoDB Connected: ${conn.connection.host}`);
-  } catch (err) {
-    console.warn(`[Notice] MongoDB connection note: ${err.message}`);
   }
+
+  return connectionPromise;
 };
 
-// Only load optional route modules when they actually exist. This prevents the
-// Vercel function from crashing if a route module is not present in a checkout.
+// Every API request gets a database connection before reaching auth/profile routes.
+// If MONGO_URI is missing or the database is unreachable, fail clearly instead of
+// pretending that a Vercel serverless filesystem is a persistent database.
+app.use("/api", async (req, res, next) => {
+  const connected = await connectDB();
+
+  if (!MONGO_URI) {
+    return res.status(503).json({
+      success: false,
+      message: "Backend database is not configured. Add MONGO_URI to Vercel Environment Variables."
+    });
+  }
+
+  if (!connected) {
+    return res.status(503).json({
+      success: false,
+      message: "Database connection failed. Check the MONGO_URI and MongoDB Atlas network access."
+    });
+  }
+
+  next();
+});
+
 const optionalRoutes = [
   ["/api/auth", "./routes/authRoutes"],
   ["/api/profile", "./routes/profileRoutes"]
@@ -56,19 +79,10 @@ for (const [prefix, routePath] of optionalRoutes) {
 }
 
 app.get("/api/health", async (req, res) => {
-  await connectDB();
-  const dbState = mongoose.connection.readyState;
-  const states = {
-    0: "disconnected",
-    1: "connected",
-    2: "connecting",
-    3: "disconnecting"
-  };
-
   res.json({
     status: "ok",
-    app: "Colon-Games API",
-    database: states[dbState] || "unknown",
+    app: "GameWiki API",
+    database: mongoose.connection.readyState === 1 ? "connected" : "disconnected",
     timestamp: new Date().toISOString()
   });
 });
@@ -87,9 +101,8 @@ app.get("*", (req, res) => {
 
 if (require.main === module) {
   app.listen(PORT, () => {
-    console.log(`Colon-Games Server running at http://localhost:${PORT}`);
+    console.log(`GameWiki Server running at http://localhost:${PORT}`);
   });
 }
 
-// Vercel uses the exported Express application as the serverless handler.
 module.exports = app;
