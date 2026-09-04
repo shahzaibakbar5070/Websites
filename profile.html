@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Profile — Colon-Games</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+
+    <!-- Profile Hero -->
+    <section class="profile-hero">
+      <div class="profile-hero-bg"></div>
+      <div class="profile-container">
+        <div class="profile-header-card">
+          <div class="profile-avatar-wrap">
+            <div class="profile-avatar" id="profAvatar">?</div>
+            <span class="online-indicator" title="Online"></span>
+          </div>
+          <div class="profile-user-info">
+            <div class="profile-name-row">
+              <h1 class="profile-username" id="profUsername">Gamer</h1>
+              <span class="user-badge">Game Explorer</span>
+            </div>
+            <p class="profile-email" id="profEmail">user@example.com</p>
+            <p class="profile-bio" id="profBio">Exploring the vast universe of video games.</p>
+            <div class="profile-meta-tags">
+              <span>📅 Joined: <strong id="profJoined">Recently</strong></span>
+              <span>🎮 Favorite Genre: <strong id="profGenre">Action / RPG</strong></span>
+            </div>
+          </div>
+          <div class="profile-actions">
+            <button class="btn btn-outline btn-sm" onclick="switchTab('edit')">✏️ Edit Profile</button>
+            <button class="btn btn-outline btn-sm btn-logout" onclick="Auth.logout()">Logout</button>
+          </div>
+        </div>
+
+        <!-- Quick Stats Grid -->
+        <div class="profile-stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon">🎮</div>
+            <div class="stat-val" id="statSavedCount">0</div>
+            <div class="stat-label">Saved Games</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">⭐</div>
+            <div class="stat-val">VIP</div>
+            <div class="stat-label">Membership</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🕹️</div>
+            <div class="stat-val" id="statPrefGenre">Action</div>
+            <div class="stat-label">Top Genre</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">🛡️</div>
+            <div class="stat-val" style="color:var(--good);">Active</div>
+            <div class="stat-label">Status</div>
+          </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="profile-tabs">
+          <button class="tab-btn active" id="tabBtnCollection" onclick="switchTab('collection')">
+            ❤️ My Saved Games (<span id="tabCount">0</span>)
+          </button>
+          <button class="tab-btn" id="tabBtnEdit" onclick="switchTab('edit')">
+            ⚙️ Edit Profile
+          </button>
+        </div>
+
+        <!-- Tab 1: Saved Collection -->
+        <div class="tab-panel" id="panelCollection">
+          <div class="games-grid" id="favoritesGrid"></div>
+          <div class="empty-state hidden" id="emptyFavs">
+            <div class="empty-icon">🎮</div>
+            <h3>No Saved Games Yet</h3>
+            <p>Browse through trending and upcoming games, then click the "❤️ Save Game" button to build your personal library.</p>
+            <a href="index.html" class="btn btn-primary" style="margin-top:16px;">Explore Games →</a>
+          </div>
+        </div>
+
+        <!-- Tab 2: Edit Profile -->
+        <div class="tab-panel hidden" id="panelEdit">
+          <div class="edit-profile-card">
+            <h2>Edit Profile Information</h2>
+            <p class="subtitle">Customize how other gamers see your Colon-Games profile</p>
+
+            <form id="editProfileForm">
+              <div class="form-group">
+                <label for="editUsername">Username</label>
+                <input type="text" id="editUsername" required minlength="3" />
+              </div>
+              <div class="form-group">
+                <label for="editBio">Bio / About Me</label>
+                <input type="text" id="editBio" placeholder="Tell other gamers what you play..." />
+              </div>
+              <div class="form-group">
+                <label for="editGenre">Favorite Game Genre</label>
+                <input type="text" id="editGenre" placeholder="e.g. Action RPG, FPS, Open World" />
+              </div>
+
+              <div class="form-error" id="editError"></div>
+              <div class="form-success" id="editSuccess"></div>
+
+              <div style="display:flex;gap:12px;margin-top:24px;">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-outline" onclick="switchTab('collection')">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-bottom">
+          <p>© 2026 Colon-Games. Game data provided by <a href="https://rawg.io" target="_blank">RAWG</a>.</p>
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/api.js"></script>
+  <script>
+    // Authentication guard
+    if (!Auth.isLoggedIn()) {
+      window.location.href = "login.html";
+    }
+
+    const user = Auth.getCurrentUser();
+
+    async function loadProfileData() {
+      const u = Auth.getCurrentUser();
+      if (!u) return;
+
+      document.getElementById("profAvatar").textContent = u.avatar || u.username.charAt(0).toUpperCase();
+      document.getElementById("profUsername").textContent = u.username;
+      document.getElementById("profEmail").textContent = u.email;
+      document.getElementById("profBio").textContent = u.bio || "Passionate gamer exploring the vast universe of video games.";
+      document.getElementById("profJoined").textContent = u.joined ? new Date(u.joined).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }) : "Recently";
+      document.getElementById("profGenre").textContent = u.favoriteGenre || "Action / RPG";
+      document.getElementById("statPrefGenre").textContent = (u.favoriteGenre || "Action").split("/")[0].trim();
+
+      document.getElementById("editUsername").value = u.username;
+      document.getElementById("editBio").value = u.bio || "";
+      document.getElementById("editGenre").value = u.favoriteGenre || "";
+
+      // Fetch latest favorites from MongoDB backend
+      if (Auth.fetchFavorites) {
+        await Auth.fetchFavorites();
+      }
+      renderSavedGames();
+    }
+
+    function renderSavedGames() {
+      const favs = Auth.getFavorites();
+      document.getElementById("statSavedCount").textContent = favs.length;
+      document.getElementById("tabCount").textContent = favs.length;
+
+      const grid = document.getElementById("favoritesGrid");
+      const emptyState = document.getElementById("emptyFavs");
+
+      if (!favs || favs.length === 0) {
+        grid.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+
+      emptyState.classList.add("hidden");
+      grid.innerHTML = favs.map(game => {
+        const img = window.GameAPI && window.GameAPI.optimizeImageUrl 
+          ? window.GameAPI.optimizeImageUrl(game.background_image)
+          : (game.background_image || "https://via.placeholder.com/600x400/1a1a2e/00e5ff?text=No+Cover");
+        const rating = game.metacritic;
+        const ratingClass = rating >= 80 ? "good" : rating >= 60 ? "ok" : "bad";
+        
+        return `
+          <div class="game-card">
+            <div class="card-img-wrap" onclick="window.location.href='game.html?id=${game.id}'" style="cursor:pointer;">
+              <img src="${img}" alt="${game.name}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400/1a1a2e/00e5ff?text=No+Cover'" />
+              ${rating ? `<div class="rating-badge ${ratingClass}">${rating}</div>` : ""}
+            </div>
+            <div class="card-body">
+              <h3 class="card-title" onclick="window.location.href='game.html?id=${game.id}'" style="cursor:pointer;">${game.name}</h3>
+              <div class="card-meta">
+                <span class="card-year">${game.released ? game.released.split("-")[0] : "TBA"}</span>
+                <button class="btn-remove-fav" onclick="removeGame(${game.id})" title="Remove from favorites">❌ Remove</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function removeGame(gameId) {
+      await Auth.toggleFavorite({ id: gameId });
+      renderSavedGames();
+    }
+
+    function switchTab(tab) {
+      const btnCol = document.getElementById("tabBtnCollection");
+      const btnEdit = document.getElementById("tabBtnEdit");
+      const panelCol = document.getElementById("panelCollection");
+      const panelEdit = document.getElementById("panelEdit");
+
+      if (tab === "edit") {
+        btnCol.classList.remove("active");
+        btnEdit.classList.add("active");
+        panelCol.classList.add("hidden");
+        panelEdit.classList.remove("hidden");
+      } else {
+        btnEdit.classList.remove("active");
+        btnCol.classList.add("active");
+        panelEdit.classList.add("hidden");
+        panelCol.classList.remove("hidden");
+      }
+    }
+
+    // Handle Edit Profile Form
+    document.getElementById("editProfileForm").addEventListener("submit", async function(e) {
+      e.preventDefault();
+      const newUsername = document.getElementById("editUsername").value;
+      const newBio = document.getElementById("editBio").value;
+      const newGenre = document.getElementById("editGenre").value;
+
+      const errEl = document.getElementById("editError");
+      const succEl = document.getElementById("editSuccess");
+      errEl.classList.remove("show");
+      succEl.classList.remove("show");
+
+      succEl.textContent = "Saving to MongoDB...";
+      succEl.classList.add("show");
+
+      const res = await Auth.updateProfile({
+        username: newUsername,
+        bio: newBio,
+        favoriteGenre: newGenre
+      });
+
+      if (res.success) {
+        succEl.textContent = "Profile updated in MongoDB successfully!";
+        succEl.classList.add("show");
+        loadProfileData();
+        // Update nav display as well
+        const navUser = document.querySelector(".nav-username");
+        if (navUser) navUser.textContent = res.user.username;
+        const navAv = document.querySelector(".nav-avatar");
+        if (navAv) navAv.textContent = res.user.avatar;
+        setTimeout(() => {
+          succEl.classList.remove("show");
+          switchTab("collection");
+        }, 1200);
+      } else {
+        succEl.classList.remove("show");
+        errEl.textContent = res.message;
+        errEl.classList.add("show");
+      }
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      renderNav("profile");
+      loadProfileData();
+    });
+  </script>
+</body>
+</html>

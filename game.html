@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game Details — Colon-Games</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+
+    <!-- Game Detail Content -->
+    <div id="gameContent">
+      <div id="gameHero" class="game-hero"></div>
+      <div class="detail-container">
+        <div class="detail-top" id="gameInfo"></div>
+        <div class="detail-section" id="gameDescription"></div>
+        <div class="detail-section" id="gameScreenshots"></div>
+        <div class="detail-section" id="gameSimilar"></div>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div id="searchResults" class="hidden">
+      <div class="search-results-page">
+        <h1 id="searchHeading">Search Results</h1>
+        <div class="games-grid" id="searchGrid"></div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-bottom">
+          <p>© 2026 Colon-Games. Game data provided by <a href="https://rawg.io" target="_blank">RAWG</a>.</p>
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>

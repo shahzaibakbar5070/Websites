@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — Colon-Games</title>
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+
+    <!-- About Hero -->
+    <section class="about-hero">
+      <h1>About <span>Colon-Games</span></h1>
+      <p>The most comprehensive video game encyclopedia on the web — free, fast, and built for gamers.</p>
+    </section>
+
+    <!-- About Content -->
+    <div class="about-content">
+
+      <!-- Stats -->
+      <div class="about-stats">
+        <div class="stat-item"><div class="stat-num">500K+</div><div class="stat-lbl">Games in Database</div></div>
+        <div class="stat-item"><div class="stat-num">50+</div><div class="stat-lbl">Platforms</div></div>
+        <div class="stat-item"><div class="stat-num">20+</div><div class="stat-lbl">Genres</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Free</div></div>
+      </div>
+
+      <!-- Cards -->
+      <div class="about-grid">
+        <div class="about-card">
+          <div class="icon">🔍</div>
+          <h3>Powerful Search</h3>
+          <p>Search any game instantly with our real-time search. Get results with cover art as you type, with full details just one click away.</p>
+        </div>
+        <div class="about-card">
+          <div class="icon">🎮</div>
+          <h3>Real Game Data</h3>
+          <p>All game information — descriptions, ratings, screenshots, developer info — is powered by <a href="https://rawg.io" target="_blank">RAWG</a>, the world's largest video game database.</p>
+        </div>
+        <div class="about-card">
+          <div class="icon">🔥</div>
+          <h3>Trending & Upcoming</h3>
+          <p>Stay on top of what's popular right now and never miss an upcoming release with our curated trending and upcoming games sections.</p>
+        </div>
+        <div class="about-card">
+          <div class="icon">👤</div>
+          <h3>Free Accounts</h3>
+          <p>Create a free account to personalize your Colon-Games experience. Save your favorite games and manage your gamer profile.</p>
+        </div>
+        <div class="about-card">
+          <div class="icon">📱</div>
+          <h3>Works Everywhere</h3>
+          <p>Colon-Games is fully responsive and works beautifully on phones, tablets, and desktops. No app download needed.</p>
+        </div>
+        <div class="about-card">
+          <div class="icon">⚡</div>
+          <h3>Blazing Fast</h3>
+          <p>Pure optimized frontend and high-speed Node.js API with MongoDB persistence for ultra-fast browsing.</p>
+        </div>
+      </div>
+
+      <!-- How it works -->
+      <div style="margin-top: 48px; padding: 32px; background: var(--card-bg); border-radius: var(--radius); border: 1px solid rgba(255,255,255,0.07);">
+        <h2 style="color:#fff; margin-bottom: 16px; font-size: 1.5rem;">How It Works</h2>
+        <p style="color: var(--text-muted); line-height: 1.8; font-size: 15px;">
+          Colon-Games fetches game data in real time from the <a href="https://rawg.io/apidocs" target="_blank">RAWG Video Games Database API</a>. 
+          This means every search, every game card with real cover art, and every detail page is pulled fresh from a database of over 500,000 games.
+          User accounts and game collections are stored securely in your database.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-bottom">
+          <p>© 2026 Colon-Games. Game data provided by <a href="https://rawg.io" target="_blank">RAWG</a>.</p>
+          <a href="index.html">← Back to Home</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js"></script>
+  <script>document.addEventListener("DOMContentLoaded", () => renderNav("about"));</script>
+</body>
+</html>

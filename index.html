@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Colon-Games — Your Game Encyclopedia</title>
+  <meta name="description" content="Discover, search and explore over 500,000 video games. Find ratings, cover art, screenshots and more." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page">
+
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg">
+        <div class="hero-particles"></div>
+        <div class="hero-grid"></div>
+      </div>
+      <div class="hero-content">
+        <div class="hero-badge">🎮 500,000+ Games</div>
+        <h1>Your Ultimate<br /><span>Game Encyclopedia</span></h1>
+        <p>Discover details, ratings, cover art and screenshots for every game ever made.</p>
+
+        <div class="hero-search-wrap">
+          <div class="hero-search">
+            <input type="text" id="heroSearch" placeholder="Search for any game... e.g. Elden Ring, GTA 6" autocomplete="off" />
+            <button id="heroSearchBtn">🔍</button>
+          </div>
+          <div class="search-dropdown" id="searchDropdown"></div>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="num">500K+</div><div class="lbl">Games</div></div>
+          <div class="hero-stat"><div class="num">50+</div><div class="lbl">Platforms</div></div>
+          <div class="hero-stat"><div class="num">20+</div><div class="lbl">Genres</div></div>
+          <div class="hero-stat"><div class="num">Free</div><div class="lbl">Forever</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Trending Games -->
+    <section class="section" id="trending">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-title"><span class="icon">🔥</span> Trending Games</div>
+            <div class="section-subtitle">Most popular games right now</div>
+          </div>
+        </div>
+        <div class="games-grid" id="trendingGrid"></div>
+      </div>
+    </section>
+
+    <!-- Upcoming Games -->
+    <section class="section section-alt" id="upcoming">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-title"><span class="icon">🚀</span> Upcoming Games</div>
+            <div class="section-subtitle">New games coming soon</div>
+          </div>
+        </div>
+        <div class="games-grid" id="upcomingGrid"></div>
+      </div>
+    </section>
+
+    <!-- Top Rated -->
+    <section class="section" id="toprated">
+      <div class="section-inner">
+        <div class="section-header">
+          <div>
+            <div class="section-title"><span class="icon">⭐</span> Top Rated</div>
+            <div class="section-subtitle">Highest-rated games of all time</div>
+          </div>
+        </div>
+        <div class="games-grid" id="topRatedGrid"></div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-inner">
+        <div class="footer-grid">
+          <div class="footer-brand">
+            <div class="logo">🎮 Colon<span>-Games</span></div>
+            <p>The most comprehensive game encyclopedia. Powered by RAWG, the world's largest video game database.</p>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="index.html">Home</a>
+            <a href="index.html#trending">Trending</a>
+            <a href="index.html#upcoming">Upcoming</a>
+            <a href="index.html#toprated">Top Rated</a>
+          </div>
+          <div class="footer-col">
+            <h4>Account</h4>
+            <a href="login.html">Login</a>
+            <a href="register.html">Register</a>
+          </div>
+          <div class="footer-col">
+            <h4>Info</h4>
+            <a href="about.html">About Us</a>
+            <a href="https://rawg.io" target="_blank">Data by RAWG</a>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <p>© 2026 Colon-Games. Game data provided by <a href="https://rawg.io" target="_blank">RAWG</a>.</p>
+          <a href="about.html">About</a>
+        </div>
+      </div>
+    </footer>
+
+  </div><!-- /page -->
+
+  <script src="js/api.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/initialData.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>
