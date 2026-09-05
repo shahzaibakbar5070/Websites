@@ -100,9 +100,9 @@ app.get("*", (req, res) => {
 });
 
 if (require.main === module) {
-  app.listen(PORT, () => {
-    console.log(`GameWiki Server running at http://localhost:${PORT}`);
-  });
+ app.listen(PORT, "0.0.0.0", () => {
+    console.log(`GameWiki Server running on port ${PORT}`);
+});
 }
 
 module.exports = app;
